@@ -12,64 +12,18 @@ var Int64 = require('node-int64');
 
 
 var ttypes = module.exports = {};
-var Message = module.exports.Message = function(args) {
-  this.text = null;
-  if (args) {
-    if (args.text !== undefined && args.text !== null) {
-      this.text = args.text;
-    }
-  }
-};
-Message.prototype = {};
-Message.prototype[Symbol.for("read")] = function(input) {
-  input.readStructBegin();
-  while (true) {
-    var ret = input.readFieldBegin();
-    var ftype = ret.ftype;
-    var fid = ret.fid;
-    if (ftype == Thrift.Type.STOP) {
-      break;
-    }
-    switch (fid) {
-      case 1:
-      if (ftype == Thrift.Type.STRING) {
-        this.text = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 0:
-        input.skip(ftype);
-        break;
-      default:
-        input.skip(ftype);
-    }
-    input.readFieldEnd();
-  }
-  input.readStructEnd();
-  return;
-};
-
-Message.prototype[Symbol.for("write")] = function(output) {
-  output.writeStructBegin('Message');
-  if (this.text !== null && this.text !== undefined) {
-    output.writeFieldBegin('text', Thrift.Type.STRING, 1);
-    output.writeString(this.text);
-    output.writeFieldEnd();
-  }
-  output.writeFieldStop();
-  output.writeStructEnd();
-  return;
-};
-
-var File = module.exports.File = function(args) {
+var FilePayload = module.exports.FilePayload = function(args) {
   this.fileName = null;
+  this.relativePath = null;
   this.fileSize = null;
   this.md5_hash = null;
   this.fileData = null;
   if (args) {
     if (args.fileName !== undefined && args.fileName !== null) {
       this.fileName = args.fileName;
+    }
+    if (args.relativePath !== undefined && args.relativePath !== null) {
+      this.relativePath = args.relativePath;
     }
     if (args.fileSize !== undefined && args.fileSize !== null) {
       this.fileSize = args.fileSize;
@@ -82,8 +36,8 @@ var File = module.exports.File = function(args) {
     }
   }
 };
-File.prototype = {};
-File.prototype[Symbol.for("read")] = function(input) {
+FilePayload.prototype = {};
+FilePayload.prototype[Symbol.for("read")] = function(input) {
   input.readStructBegin();
   while (true) {
     var ret = input.readFieldBegin();
@@ -101,20 +55,27 @@ File.prototype[Symbol.for("read")] = function(input) {
       }
       break;
       case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.relativePath = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
       if (ftype == Thrift.Type.I64) {
         this.fileSize = input.readI64();
       } else {
         input.skip(ftype);
       }
       break;
-      case 3:
+      case 4:
       if (ftype == Thrift.Type.STRING) {
         this.md5_hash = input.readString();
       } else {
         input.skip(ftype);
       }
       break;
-      case 4:
+      case 5:
       if (ftype == Thrift.Type.STRING) {
         this.fileData = input.readBinary();
       } else {
@@ -130,26 +91,94 @@ File.prototype[Symbol.for("read")] = function(input) {
   return;
 };
 
-File.prototype[Symbol.for("write")] = function(output) {
-  output.writeStructBegin('File');
+FilePayload.prototype[Symbol.for("write")] = function(output) {
+  output.writeStructBegin('FilePayload');
   if (this.fileName !== null && this.fileName !== undefined) {
     output.writeFieldBegin('fileName', Thrift.Type.STRING, 1);
     output.writeString(this.fileName);
     output.writeFieldEnd();
   }
+  if (this.relativePath !== null && this.relativePath !== undefined) {
+    output.writeFieldBegin('relativePath', Thrift.Type.STRING, 2);
+    output.writeString(this.relativePath);
+    output.writeFieldEnd();
+  }
   if (this.fileSize !== null && this.fileSize !== undefined) {
-    output.writeFieldBegin('fileSize', Thrift.Type.I64, 2);
+    output.writeFieldBegin('fileSize', Thrift.Type.I64, 3);
     output.writeI64(this.fileSize);
     output.writeFieldEnd();
   }
   if (this.md5_hash !== null && this.md5_hash !== undefined) {
-    output.writeFieldBegin('md5_hash', Thrift.Type.STRING, 3);
+    output.writeFieldBegin('md5_hash', Thrift.Type.STRING, 4);
     output.writeString(this.md5_hash);
     output.writeFieldEnd();
   }
   if (this.fileData !== null && this.fileData !== undefined) {
-    output.writeFieldBegin('fileData', Thrift.Type.STRING, 4);
+    output.writeFieldBegin('fileData', Thrift.Type.STRING, 5);
     output.writeBinary(this.fileData);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var TransferResult = module.exports.TransferResult = function(args) {
+  this.success = null;
+  this.message = null;
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+    if (args.message !== undefined && args.message !== null) {
+      this.message = args.message;
+    }
+  }
+};
+TransferResult.prototype = {};
+TransferResult.prototype[Symbol.for("read")] = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.message = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+TransferResult.prototype[Symbol.for("write")] = function(output) {
+  output.writeStructBegin('TransferResult');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 1);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.message !== null && this.message !== undefined) {
+    output.writeFieldBegin('message', Thrift.Type.STRING, 2);
+    output.writeString(this.message);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

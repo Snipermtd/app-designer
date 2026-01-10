@@ -64,16 +64,16 @@ FileService_ping_result.prototype[Symbol.for("write")] = function(output) {
   return;
 };
 
-var FileService_upload_args = function(args) {
+var FileService_importFile_args = function(args) {
   this.f = null;
   if (args) {
     if (args.f !== undefined && args.f !== null) {
-      this.f = new ttypes.File(args.f);
+      this.f = new ttypes.FilePayload(args.f);
     }
   }
 };
-FileService_upload_args.prototype = {};
-FileService_upload_args.prototype[Symbol.for("read")] = function(input) {
+FileService_importFile_args.prototype = {};
+FileService_importFile_args.prototype[Symbol.for("read")] = function(input) {
   input.readStructBegin();
   while (true) {
     var ret = input.readFieldBegin();
@@ -85,7 +85,7 @@ FileService_upload_args.prototype[Symbol.for("read")] = function(input) {
     switch (fid) {
       case 1:
       if (ftype == Thrift.Type.STRUCT) {
-        this.f = new ttypes.File();
+        this.f = new ttypes.FilePayload();
         this.f[Symbol.for("read")](input);
       } else {
         input.skip(ftype);
@@ -103,8 +103,8 @@ FileService_upload_args.prototype[Symbol.for("read")] = function(input) {
   return;
 };
 
-FileService_upload_args.prototype[Symbol.for("write")] = function(output) {
-  output.writeStructBegin('FileService_upload_args');
+FileService_importFile_args.prototype[Symbol.for("write")] = function(output) {
+  output.writeStructBegin('FileService_importFile_args');
   if (this.f !== null && this.f !== undefined) {
     output.writeFieldBegin('f', Thrift.Type.STRUCT, 1);
     this.f[Symbol.for("write")](output);
@@ -115,16 +115,16 @@ FileService_upload_args.prototype[Symbol.for("write")] = function(output) {
   return;
 };
 
-var FileService_upload_result = function(args) {
+var FileService_importFile_result = function(args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
-      this.success = args.success;
+      this.success = new ttypes.TransferResult(args.success);
     }
   }
 };
-FileService_upload_result.prototype = {};
-FileService_upload_result.prototype[Symbol.for("read")] = function(input) {
+FileService_importFile_result.prototype = {};
+FileService_importFile_result.prototype[Symbol.for("read")] = function(input) {
   input.readStructBegin();
   while (true) {
     var ret = input.readFieldBegin();
@@ -135,8 +135,9 @@ FileService_upload_result.prototype[Symbol.for("read")] = function(input) {
     }
     switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRING) {
-        this.success = input.readString();
+      if (ftype == Thrift.Type.STRUCT) {
+        this.success = new ttypes.TransferResult();
+        this.success[Symbol.for("read")](input);
       } else {
         input.skip(ftype);
       }
@@ -153,11 +154,112 @@ FileService_upload_result.prototype[Symbol.for("read")] = function(input) {
   return;
 };
 
-FileService_upload_result.prototype[Symbol.for("write")] = function(output) {
-  output.writeStructBegin('FileService_upload_result');
+FileService_importFile_result.prototype[Symbol.for("write")] = function(output) {
+  output.writeStructBegin('FileService_importFile_result');
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRING, 0);
-    output.writeString(this.success);
+    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    this.success[Symbol.for("write")](output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var FileService_exportFile_args = function(args) {
+  this.relativePath = null;
+  if (args) {
+    if (args.relativePath !== undefined && args.relativePath !== null) {
+      this.relativePath = args.relativePath;
+    }
+  }
+};
+FileService_exportFile_args.prototype = {};
+FileService_exportFile_args.prototype[Symbol.for("read")] = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.relativePath = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+FileService_exportFile_args.prototype[Symbol.for("write")] = function(output) {
+  output.writeStructBegin('FileService_exportFile_args');
+  if (this.relativePath !== null && this.relativePath !== undefined) {
+    output.writeFieldBegin('relativePath', Thrift.Type.STRING, 1);
+    output.writeString(this.relativePath);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var FileService_exportFile_result = function(args) {
+  this.success = null;
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = new ttypes.FilePayload(args.success);
+    }
+  }
+};
+FileService_exportFile_result.prototype = {};
+FileService_exportFile_result.prototype[Symbol.for("read")] = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.success = new ttypes.FilePayload();
+        this.success[Symbol.for("read")](input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+FileService_exportFile_result.prototype[Symbol.for("write")] = function(output) {
+  output.writeStructBegin('FileService_exportFile_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    this.success[Symbol.for("write")](output);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -228,7 +330,7 @@ FileServiceClient.prototype.recv_ping = function(input,mtype,rseqid) {
   callback(null);
 };
 
-FileServiceClient.prototype.upload = function(f, callback) {
+FileServiceClient.prototype.importFile = function(f, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -239,22 +341,22 @@ FileServiceClient.prototype.upload = function(f, callback) {
         _defer.resolve(result);
       }
     };
-    this.send_upload(f);
+    this.send_importFile(f);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_upload(f);
+    this.send_importFile(f);
   }
 };
 
-FileServiceClient.prototype.send_upload = function(f) {
+FileServiceClient.prototype.send_importFile = function(f) {
   var output = new this.pClass(this.output);
   var params = {
     f: f
   };
-  var args = new FileService_upload_args(params);
+  var args = new FileService_importFile_args(params);
   try {
-    output.writeMessageBegin('upload', Thrift.MessageType.CALL, this.seqid());
+    output.writeMessageBegin('importFile', Thrift.MessageType.CALL, this.seqid());
     args[Symbol.for("write")](output);
     output.writeMessageEnd();
     return this.output.flush();
@@ -268,7 +370,7 @@ FileServiceClient.prototype.send_upload = function(f) {
   }
 };
 
-FileServiceClient.prototype.recv_upload = function(input,mtype,rseqid) {
+FileServiceClient.prototype.recv_importFile = function(input,mtype,rseqid) {
   var callback = this._reqs[rseqid] || function() {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
@@ -277,14 +379,73 @@ FileServiceClient.prototype.recv_upload = function(input,mtype,rseqid) {
     input.readMessageEnd();
     return callback(x);
   }
-  var result = new FileService_upload_result();
+  var result = new FileService_importFile_result();
   result[Symbol.for("read")](input);
   input.readMessageEnd();
 
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('upload failed: unknown result');
+  return callback('importFile failed: unknown result');
+};
+
+FileServiceClient.prototype.exportFile = function(relativePath, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_exportFile(relativePath);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_exportFile(relativePath);
+  }
+};
+
+FileServiceClient.prototype.send_exportFile = function(relativePath) {
+  var output = new this.pClass(this.output);
+  var params = {
+    relativePath: relativePath
+  };
+  var args = new FileService_exportFile_args(params);
+  try {
+    output.writeMessageBegin('exportFile', Thrift.MessageType.CALL, this.seqid());
+    args[Symbol.for("write")](output);
+    output.writeMessageEnd();
+    return this.output.flush();
+  }
+  catch (e) {
+    delete this._reqs[this.seqid()];
+    if (typeof output.reset === 'function') {
+      output.reset();
+    }
+    throw e;
+  }
+};
+
+FileServiceClient.prototype.recv_exportFile = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x[Symbol.for("read")](input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new FileService_exportFile_result();
+  result[Symbol.for("read")](input);
+  input.readMessageEnd();
+
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('exportFile failed: unknown result');
 };
 exports.Client = FileServiceClient;
 var FileServiceProcessor = function(handler) {
@@ -340,36 +501,73 @@ FileServiceProcessor.prototype.process_ping = function(seqid, input, output) {
     });
   }
 };
-FileServiceProcessor.prototype.process_upload = function(seqid, input, output) {
-  var args = new FileService_upload_args();
+FileServiceProcessor.prototype.process_importFile = function(seqid, input, output) {
+  var args = new FileService_importFile_args();
   args[Symbol.for("read")](input);
   input.readMessageEnd();
-  if (this._handler.upload.length === 1) {
-    Q.fcall(this._handler.upload.bind(this._handler),
+  if (this._handler.importFile.length === 1) {
+    Q.fcall(this._handler.importFile.bind(this._handler),
       args.f
     ).then(function(result) {
-      var result_obj = new FileService_upload_result({success: result});
-      output.writeMessageBegin("upload", Thrift.MessageType.REPLY, seqid);
+      var result_obj = new FileService_importFile_result({success: result});
+      output.writeMessageBegin("importFile", Thrift.MessageType.REPLY, seqid);
       result_obj[Symbol.for("write")](output);
       output.writeMessageEnd();
       output.flush();
     }).catch(function (err) {
       var result;
       result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-      output.writeMessageBegin("upload", Thrift.MessageType.EXCEPTION, seqid);
+      output.writeMessageBegin("importFile", Thrift.MessageType.EXCEPTION, seqid);
       result[Symbol.for("write")](output);
       output.writeMessageEnd();
       output.flush();
     });
   } else {
-    this._handler.upload(args.f, function (err, result) {
+    this._handler.importFile(args.f, function (err, result) {
       var result_obj;
       if ((err === null || typeof err === 'undefined')) {
-        result_obj = new FileService_upload_result((err !== null || typeof err === 'undefined') ? err : {success: result});
-        output.writeMessageBegin("upload", Thrift.MessageType.REPLY, seqid);
+        result_obj = new FileService_importFile_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("importFile", Thrift.MessageType.REPLY, seqid);
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("upload", Thrift.MessageType.EXCEPTION, seqid);
+        output.writeMessageBegin("importFile", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj[Symbol.for("write")](output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+FileServiceProcessor.prototype.process_exportFile = function(seqid, input, output) {
+  var args = new FileService_exportFile_args();
+  args[Symbol.for("read")](input);
+  input.readMessageEnd();
+  if (this._handler.exportFile.length === 1) {
+    Q.fcall(this._handler.exportFile.bind(this._handler),
+      args.relativePath
+    ).then(function(result) {
+      var result_obj = new FileService_exportFile_result({success: result});
+      output.writeMessageBegin("exportFile", Thrift.MessageType.REPLY, seqid);
+      result_obj[Symbol.for("write")](output);
+      output.writeMessageEnd();
+      output.flush();
+    }).catch(function (err) {
+      var result;
+      result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+      output.writeMessageBegin("exportFile", Thrift.MessageType.EXCEPTION, seqid);
+      result[Symbol.for("write")](output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  } else {
+    this._handler.exportFile(args.relativePath, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined')) {
+        result_obj = new FileService_exportFile_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("exportFile", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("exportFile", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj[Symbol.for("write")](output);
       output.writeMessageEnd();
