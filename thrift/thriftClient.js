@@ -2,8 +2,8 @@
 "use strict";
 //Imports
 const thrift = require("thrift");
-const fileService_types = require("../../gen-nodejs/fileService_types.js");
-const FileService = require("../../gen-nodejs/FileService");
+const fileService_types = require("../gen-nodejs/fileService_types.js");
+const FileService = require("../gen-nodejs/FileService");
 const { execSync } = require("child_process");
 
 const fs = require("fs");
